@@ -50,10 +50,10 @@ public class KoneksiDb {
     }
 
     public static void tambah(Scanner scanner) {
-        System.out.print("Masukkan Kode Barang: ");
-        String kode_brg = scanner.nextLine();
-        System.out.print("Masukkan Nama Barang: ");
-        String nama_brg = scanner.nextLine();
+        System.out.print("Masukkan Kode Buku: ");
+        String kode_buku = scanner.nextLine();
+        System.out.print("Masukkan Nama Buku: ");
+        String nama_buku = scanner.nextLine();
         System.out.print("Masukkan Satuan: ");
         String satuan = scanner.nextLine();
         System.out.print("Masukkan Stok: ");
@@ -65,11 +65,11 @@ public class KoneksiDb {
         try {
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
-            String sql = "INSERT INTO barang (kd_brg, nm_brg, satuan, stok_brg, stok_min) VALUES (?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO buku (kode_buku, nama_buku, satuan, stok, stok_min) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sql);
 
-            ps.setString(1, kode_brg);
-            ps.setString(2, nama_brg);
+            ps.setString(1, kode_buku);
+            ps.setString(2, nama_buku);
             ps.setString(3, satuan);
             ps.setInt(4, stok);
             ps.setInt(5, stok_min);
@@ -85,10 +85,10 @@ public class KoneksiDb {
     }
 
     public static void ubah(Scanner scanner) {
-        System.out.print("Masukkan Kode Barang yang akan diubah: ");
-        String kode_brg = scanner.nextLine();
-        System.out.print("Masukkan Nama Barang baru: ");
-        String nama_brg = scanner.nextLine();
+        System.out.print("Masukkan Kode Buku yang akan diubah: ");
+        String kode_buku = scanner.nextLine();
+        System.out.print("Masukkan Nama Buku baru: ");
+        String nama_buku = scanner.nextLine();
         System.out.print("Masukkan Satuan baru: ");
         String satuan = scanner.nextLine();
         System.out.print("Masukkan Stok baru: ");
@@ -101,21 +101,21 @@ public class KoneksiDb {
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            // Cek apakah data ada
-            String checkSql = "SELECT * FROM barang WHERE kd_brg = ?";
+            
+            String checkSql = "SELECT * FROM buku WHERE kode_buku = ?";
             PreparedStatement checkPs = conn.prepareStatement(checkSql);
-            checkPs.setString(1, kode_brg);
+            checkPs.setString(1, kode_buku);
             rs = checkPs.executeQuery();
 
             if (rs.next()) {
-                String sql = "UPDATE barang SET nm_brg = ?, satuan = ?, stok_brg = ?, stok_min = ? WHERE kd_brg = ?";
+                String sql = "UPDATE buku SET nama_buku = ?, satuan = ?, stok = ?, stok_min = ? WHERE kode_buku = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
 
-                ps.setString(1, nama_brg);
+                ps.setString(1, nama_buku);
                 ps.setString(2, satuan);
                 ps.setInt(3, stok);
                 ps.setInt(4, stok_min);
-                ps.setString(5, kode_brg);
+                ps.setString(5, kode_buku);
 
                 ps.executeUpdate();
                 System.out.println("Data berhasil diubah!");
@@ -133,23 +133,23 @@ public class KoneksiDb {
     }
 
     public static void hapus(Scanner scanner) {
-        System.out.print("Masukkan Kode Barang yang akan dihapus: ");
-        String kode_brg = scanner.nextLine();
+        System.out.print("Masukkan Kode Buku yang akan dihapus: ");
+        String kode_buku = scanner.nextLine();
 
         try {
             Class.forName(JDBC_DRIVER);
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
 
-            String checkSql = "SELECT * FROM barang WHERE kd_brg = ?";
+            String checkSql = "SELECT * FROM buku WHERE kode_buku = ?";
             PreparedStatement checkPs = conn.prepareStatement(checkSql);
-            checkPs.setString(1, kode_brg);
+            checkPs.setString(1, kode_buku);
             rs = checkPs.executeQuery();
 
             if (rs.next()) {
-                String sql = "DELETE FROM barang WHERE kd_brg = ?";
+                String sql = "DELETE FROM buku WHERE kode_buku = ?";
                 PreparedStatement ps = conn.prepareStatement(sql);
 
-                ps.setString(1, kode_brg);
+                ps.setString(1, kode_buku);
 
                 ps.executeUpdate();
                 System.out.println("Data berhasil dihapus!");
@@ -172,16 +172,16 @@ public class KoneksiDb {
             conn = DriverManager.getConnection(DB_URL, USER, PASS);
             stmt = conn.createStatement();
 
-            rs = stmt.executeQuery("SELECT * FROM barang");
+            rs = stmt.executeQuery("SELECT * FROM buku");
             int i = 1;
             boolean dataAda = false;
             while (rs.next()) {
                 dataAda = true;
                 System.out.println("Data ke-" + i);
-                System.out.println("Kode Barang: " + rs.getString("kd_brg"));
-                System.out.println("Nama Barang: " + rs.getString("nm_brg"));
+                System.out.println("Kode Buku: " + rs.getString("kode_buku"));
+                System.out.println("Nama Buku: " + rs.getString("nama_buku"));
                 System.out.println("Satuan: " + rs.getString("satuan"));
-                System.out.println("Stok: " + rs.getInt("stok_brg"));
+                System.out.println("Stok: " + rs.getInt("stok"));
                 System.out.println("Stok minimal: " + rs.getInt("stok_min"));
                 i++;
             }
